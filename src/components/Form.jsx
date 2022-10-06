@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { addTodo } from "../redux/modules/todos";
 
 const AddForm = styled.form`
   display: flex;
@@ -42,13 +44,35 @@ const AddButton = styled.button`
 `;
 
 function Form() {
+  const dispatch = useDispatch();
+  const [inputs, setInputs] = useState({
+    title: "",
+    body: "",
+  });
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setInputs({ ...inputs, [name]: value });
+  };
+
+  const onSubmit = (e) => {
+    const { title, body } = inputs;
+    e.preventDefault();
+    if (!title.trim() || !body.trim()) return;
+    dispatch(addTodo({ title, body }));
+    setInputs({
+      title: "",
+      body: "",
+    });
+  };
+
   return (
-    <AddForm>
+    <AddForm onSubmit={onSubmit}>
       <InputGroup>
         <FormLabel>제목</FormLabel>
-        <AddInput />
+        <AddInput name="title" value={inputs.title} onChange={onChange} />
         <FormLabel>내용</FormLabel>
-        <AddInput />
+        <AddInput name="body" value={inputs.body} onChange={onChange} />
       </InputGroup>
       <AddButton type="submit">추가하기</AddButton>
     </AddForm>
