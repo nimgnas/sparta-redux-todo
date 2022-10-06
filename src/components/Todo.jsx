@@ -1,5 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { deleteTodo, toggleTodo } from "../redux/modules/todos";
 import Button from "./Button";
@@ -38,8 +39,8 @@ const DetailLink = styled.span`
 `;
 
 function Todo({ id, title, body, isDone }) {
-  console.log(isDone);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const onDelete = () => {
     dispatch(deleteTodo(id));
@@ -49,9 +50,13 @@ function Todo({ id, title, body, isDone }) {
     dispatch(toggleTodo(id));
   };
 
+  const goDetailPage = () => {
+    navigate(`${id}`);
+  };
+
   return (
     <TodoContainer>
-      <DetailLink>자세히보기</DetailLink>
+      <DetailLink onClick={goDetailPage}>자세히보기</DetailLink>
       <TextGroup>
         <h2>{title}</h2>
         <div>{body}</div>
