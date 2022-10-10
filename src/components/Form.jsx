@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { addTodo } from "../redux/modules/todos";
@@ -32,15 +32,22 @@ const AddInput = styled.input`
   padding: 0 12px;
 `;
 
-const AddButton = styled.button`
+const submitButton = styled.button`
   border: none;
   border-radius: 10px;
   height: 40px;
   width: 140px;
   font-weight: bold;
-  background-color: #607eaa;
   color: white;
   cursor: pointer;
+`;
+
+const AddButton = styled(submitButton)`
+  background-color: #607eaa;
+`;
+
+const DisabledButton = styled(submitButton)`
+  background-color: gray;
 `;
 
 function Form() {
@@ -49,6 +56,16 @@ function Form() {
     title: "",
     body: "",
   });
+  const [nullCheck, setNullCheck] = useState(true);
+
+  useEffect(() => {
+    const onNullCheck = () => {
+      const { title, body } = inputs;
+      if (!title.trim() || !body.trim()) setNullCheck(true);
+      else setNullCheck(false);
+    };
+    onNullCheck();
+  }, [inputs, nullCheck]);
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -58,7 +75,9 @@ function Form() {
   const onSubmit = (e) => {
     const { title, body } = inputs;
     e.preventDefault();
-    if (!title.trim() || !body.trim()) return;
+
+    // nullcheck이 false인 경우에만 동작함
+    // false인 경우 disabled의 버튼이 렌더링된다
     dispatch(addTodo({ title, body }));
     setInputs({
       title: "",
@@ -74,7 +93,13 @@ function Form() {
         <FormLabel>내용</FormLabel>
         <AddInput name="body" value={inputs.body} onChange={onChange} />
       </InputGroup>
-      <AddButton type="submit">추가하기</AddButton>
+      {nullCheck ? (
+        <DisabledButton type="submit" disabled>
+          추가하기
+        </DisabledButton>
+      ) : (
+        <AddButton type="submit">추가하기</AddButton>
+      )}
     </AddForm>
   );
 }
