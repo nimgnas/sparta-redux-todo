@@ -25,15 +25,15 @@ export const toggleTodo = (id) => ({
 
 const initialState = [];
 
-export default function todos(state = initialState, action) {
-  switch (action.type) {
+export default function todos(state = initialState, { type, id, todo }) {
+  switch (type) {
     case ADD_TODO:
-      return state.concat(action.todo);
+      return state.concat(todo);
     case DELETE_TODO:
-      return state.filter((todo) => todo.id !== action.id);
+      return state.filter((todo) => todo.id !== id);
     case TOGGLE_TODO:
       return state.map((todo) =>
-        todo.id === action.id ? { ...todo, isDone: !todo.isDone } : todo
+        todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
       );
 
     default:
