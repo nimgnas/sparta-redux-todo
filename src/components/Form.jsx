@@ -32,7 +32,7 @@ const AddInput = styled.input`
   padding: 0 12px;
 `;
 
-const submitButton = styled.button`
+const SubmitButton = styled.button`
   border: none;
   border-radius: 10px;
   height: 40px;
@@ -40,14 +40,9 @@ const submitButton = styled.button`
   font-weight: bold;
   color: white;
   cursor: pointer;
-`;
 
-const AddButton = styled(submitButton)`
-  background-color: #607eaa;
-`;
-
-const DisabledButton = styled(submitButton)`
-  background-color: gray;
+  ${(props) =>
+    props.disabled ? "background-color: gray" : "background-color: #607eaa"}
 `;
 
 function Form() {
@@ -65,7 +60,7 @@ function Form() {
       else setNullCheck(false);
     };
     onNullCheck();
-  }, [inputs, nullCheck]);
+  }, [inputs]);
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -93,13 +88,9 @@ function Form() {
         <FormLabel>내용</FormLabel>
         <AddInput name="body" value={inputs.body} onChange={onChange} />
       </InputGroup>
-      {nullCheck ? (
-        <DisabledButton type="submit" disabled>
-          추가하기
-        </DisabledButton>
-      ) : (
-        <AddButton type="submit">추가하기</AddButton>
-      )}
+      <SubmitButton type="submit" disabled={nullCheck}>
+        추가하기
+      </SubmitButton>
     </AddForm>
   );
 }
